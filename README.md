@@ -8,5 +8,5 @@ WhatPulse
 
 Run this:
 
-    layman -o https://raw.github.com/cvut/gentoo-overlay/master/overlay.xml -f -a jelte
+    layman -o https://raw.github.com/JelteF/jelte-overlay/master/repositories.xml -f -a jelte
 
