@@ -24,10 +24,11 @@ KEYWORDS="-* x86 amd64"
 
 IUSE="pcap"
 
-RDEPEND="${DEPEND} dev-qt/qtwebkit dev-qt/qtsql[sqlite] dev-qt/qtcore
+DEPEND="${DEPEND}
 	pcap? ( net-libs/libpcap
-			sys-libs/libcap
-	)"
+			sys-libs/libcap )"
+
+RDEPEND="${DEPEND} dev-qt/qtwebkit dev-qt/qtsql[sqlite] dev-qt/qtcore"
 
 src_unpack() {
 	mkdir "${S}"
