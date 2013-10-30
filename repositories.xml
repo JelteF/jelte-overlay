@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repositories version="1.0">
+  <repo quality="experimental" status="unofficial">
+    <name>jelte</name>
+    <description>A Gentoo overlay for utilities that Jelte uses</description>
+        <homepage>https://github.com/JelteF/jelte-overlay/</homepage>
+        <owner>
+            <name>Jelte Fennema</name>
+            <email>gentoo-overlay@jeltef.nl</email>
+        </owner>
+    <source type="git">git://github.com/JelteF/jelte-overlay.git</source>
+    <feed>https://github.com/JelteF/jelte-overlay/commits/master.atom</feed>
+  </repo>
+</repositories>
