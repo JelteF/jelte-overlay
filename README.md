@@ -1,8 +1,9 @@
 jelte-overlay
 =============
 
-Custom Gentoo overlay containing a fixed script for powerline and one for
-WhatPulse. It also contains a solarized and vi patched version of htop
+Custom Gentoo overlay currently containing ebuilds for:
+- Whatpulse
+- htop (with solarized patch and vi patch)
 
 ### How to install
 
