@@ -4,6 +4,7 @@ jelte-overlay
 Custom Gentoo overlay currently containing ebuilds for:
 - Whatpulse
 - htop (with solarized patch and vi patch)
+- Fish (a git source build)
 
 ### How to install
 
