@@ -28,7 +28,7 @@ DEPEND="${DEPEND}
 	pcap? ( net-libs/libpcap
 			sys-libs/libcap )"
 
-RDEPEND="${DEPEND} dev-qt/qtwebkit dev-qt/qtsql[sqlite] dev-qt/qtcore"
+RDEPEND="${DEPEND} dev-qt/qtwebkit:4 dev-qt/qtsql[sqlite] dev-qt/qtcore:4"
 
 src_unpack() {
 	mkdir "${S}"
