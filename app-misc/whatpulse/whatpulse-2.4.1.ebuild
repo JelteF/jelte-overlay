@@ -59,5 +59,5 @@ pkg_postinst() {
 	elog "This can be done using this command:"
 	elog "gpasswd -a \$USER input"
 	elog ""
-	elog "You also have to reboot to make sure the UDEV rules are aplied"
+	elog "You also have to reboot to make sure the UDEV rules are applied"
 }
