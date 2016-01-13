@@ -32,7 +32,7 @@ Note that you cannot use FB_NVIDIA with nvidia's proprietary driver"
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/nvidia-0.87-linux-4.0.patch
+	epatch "${FILESDIR}"/${P}-linux-4.0.patch
 }
 
 src_compile() {
