@@ -8,7 +8,7 @@ inherit linux-mod eutils
 DESCRIPTION="Linux driver for setting the backlight brightness on laptops using
 NVIDIA GPU"
 HOMEPAGE="https://github.com/guillaumezin/nvidiabl"
-SRC_URI="https://github.com/guillaumezin/${PN}/archive/v${PV}.tar.gz"
+SRC_URI="https://github.com/guillaumezin/${PN}/archive/v${PV}.tar.gz -> ${P}.tar.gz"
 
 LICENSE="GPL-2"
 SLOT="0"
@@ -23,7 +23,7 @@ RESTRICT="test"
 BUILD_TARGETS="modules"
 MODULE_NAMES="nvidiabl()"
 
-pkg_pretend() {
+pkg_setup() {
 	CONFIG_CHECK="FB_BACKLIGHT"
 	ERROR_FB_BACKLIGHT="Your kernel does not support FB_BACKLIGHT. To enable you
 it you can enable any frame buffer with backlight control or nouveau.
@@ -32,7 +32,7 @@ Note that you cannot use FB_NVIDIA with nvidia's proprietary driver"
 }
 
 src_prepare() {
-	epatch "${FILESDIR}"/kernel4.0.patch
+	epatch "${FILESDIR}"/nvidia-0.87-linux-4.0.patch
 }
 
 src_compile() {
