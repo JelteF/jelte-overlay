@@ -20,9 +20,6 @@ RDEPEND=""
 
 RESTRICT="test"
 
-BUILD_TARGETS="modules"
-MODULE_NAMES="nvidiabl()"
-
 pkg_setup() {
 	CONFIG_CHECK="FB_BACKLIGHT"
 	ERROR_FB_BACKLIGHT="Your kernel does not support FB_BACKLIGHT. To enable you
@@ -37,6 +34,9 @@ src_prepare() {
 
 src_compile() {
 	BUILD_PARAMS="KVER=${KV_FULL}"
+	BUILD_TARGETS="modules"
+	MODULE_NAMES="nvidiabl()"
+
 	MAKEOPTS+=" V=1"
 	linux-mod_src_compile
 }
