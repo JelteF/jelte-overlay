@@ -1,0 +1,249 @@
+diff -u htop-2.0.0/Action.c htop-2.0.0-vim/Action.c
+--- htop-2.0.0/Action.c	2016-02-02 16:38:41.000000000 +0100
++++ htop-2.0.0-vim/Action.c	2016-02-17 23:41:29.653015293 +0100
+@@ -66,7 +66,7 @@
+    Panel* panel = st->panel;
+    Header* header = st->header;
+    Settings* settings = st->settings;
+-   
++
+    int y = panel->y;
+    ScreenManager* scr = ScreenManager_new(0, header->height, 0, -1, HORIZONTAL, header, settings, false);
+    scr->allowFocusChange = false;
+@@ -273,7 +273,7 @@
+       return HTOP_OK;
+ #if (HAVE_LIBHWLOC || HAVE_NATIVE_AFFINITY)
+    Panel* panel = st->panel;
+-   
++
+    Process* p = (Process*) Panel_getSelected(panel);
+    if (!p) return HTOP_OK;
+    Affinity* affinity = Affinity_get(p, st->pl);
+@@ -382,7 +382,7 @@
+ }
+ 
+ static struct { const char* key; const char* info; } helpLeft[] = {
+-   { .key = " Arrows: ", .info = "scroll process list" },
++   { .key = "   hjkl: ", .info = "scroll process list" },
+    { .key = " Digits: ", .info = "incremental PID search" },
+    { .key = "   F3 /: ", .info = "incremental name search" },
+    { .key = "   F4 \\: ",.info = "incremental name filtering" },
+@@ -402,7 +402,7 @@
+    { .key = "  Space: ", .info = "tag process" },
+    { .key = "      c: ", .info = "tag process and its children" },
+    { .key = "      U: ", .info = "untag all processes" },
+-   { .key = "   F9 k: ", .info = "kill process/tagged processes" },
++   { .key = "   F9 d: ", .info = "kill process/tagged processes" },
+    { .key = "   F7 ]: ", .info = "higher priority (root only)" },
+    { .key = "   F8 [: ", .info = "lower priority (+ nice)" },
+ #if (HAVE_LIBHWLOC || HAVE_NATIVE_AFFINITY)
+@@ -410,11 +410,11 @@
+ #endif
+    { .key = "      e: ", .info = "show process environment" },
+    { .key = "      i: ", .info = "set IO prority" },
+-   { .key = "      l: ", .info = "list open files with lsof" },
++   { .key = "      L: ", .info = "list open files with lsof" },
+    { .key = "      s: ", .info = "trace syscalls with strace" },
+    { .key = "         ", .info = "" },
+    { .key = "   F2 S: ", .info = "setup" },
+-   { .key = "   F1 h: ", .info = "show this help screen" },
++   { .key = "   F1 ?: ", .info = "show this help screen" },
+    { .key = "  F10 q: ", .info = "quit" },
+    { .key = NULL, .info = NULL }
+ };
+@@ -550,7 +550,7 @@
+    keys['q'] = actionQuit;
+    keys['a'] = actionSetAffinity;
+    keys[KEY_F(9)] = actionKill;
+-   keys['k'] = actionKill;
++   keys['d'] = actionKill;
+    keys[KEY_RECLICK] = actionExpandOrCollapse;
+    keys['+'] = actionExpandOrCollapse;
+    keys['='] = actionExpandOrCollapse;
+@@ -560,12 +560,11 @@
+    keys['S'] = actionSetup;
+    keys['C'] = actionSetup;
+    keys[KEY_F(2)] = actionSetup;
+-   keys['l'] = actionLsof;
++   keys['L'] = actionLsof;
+    keys['s'] = actionStrace;
+    keys[' '] = actionTag;
+    keys['\014'] = actionRedraw; // Ctrl+L
+    keys[KEY_F(1)] = actionHelp;
+-   keys['h'] = actionHelp;
+    keys['?'] = actionHelp;
+    keys['U'] = actionUntagAll;
+    keys['c'] = actionTagAllChildren;
+diff -u htop-2.0.0/ColumnsPanel.c htop-2.0.0-vim/ColumnsPanel.c
+--- htop-2.0.0/ColumnsPanel.c	2016-02-02 15:58:45.000000000 +0100
++++ htop-2.0.0-vim/ColumnsPanel.c	2016-02-17 23:46:41.229672352 +0100
+@@ -40,7 +40,7 @@
+ 
+ static HandlerResult ColumnsPanel_eventHandler(Panel* super, int ch) {
+    ColumnsPanel* const this = (ColumnsPanel*) super;
+-   
++
+    int selected = Panel_getSelectedIndex(super);
+    HandlerResult result = IGNORED;
+    int size = Panel_size(super);
+@@ -61,6 +61,7 @@
+          break;
+       }
+       case KEY_UP:
++      case 'k':
+       {
+          if (!this->moving) {
+             break;
+@@ -77,6 +78,7 @@
+          break;
+       }
+       case KEY_DOWN:
++      case 'j':
+       {
+          if (!this->moving) {
+             break;
+@@ -87,7 +89,7 @@
+       case ']':
+       case '+':
+       {
+-         if (selected < size - 2) 
++         if (selected < size - 2)
+             Panel_moveSelectedDown(super);
+          result = HANDLED;
+          break;
+diff -u htop-2.0.0/MetersPanel.c htop-2.0.0-vim/MetersPanel.c
+--- htop-2.0.0/MetersPanel.c	2015-12-23 16:58:35.000000000 +0100
++++ htop-2.0.0-vim/MetersPanel.c	2016-02-17 23:53:29.959659747 +0100
+@@ -37,7 +37,7 @@
+ 
+ static const char* MetersMovingFunctions[] = {"Up    ", "Down  ", "Left  ", "Right ",  "Confirm", "Delete", "Done  ", NULL};
+ static const char* MetersMovingKeys[] = {"Up", "Dn", "Lt", "Rt", "Enter", "Del", "Esc"};
+-static int MetersMovingEvents[] = {KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, 13, KEY_DC, 27};
++static int MetersMovingEvents[] = {KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT, 13, KEY_DC, 27, 'h', 'j', 'k', 'l'};
+ static FunctionBar* Meters_movingBar = NULL;
+ 
+ static void MetersPanel_delete(Object* object) {
+@@ -83,7 +83,7 @@
+ 
+ static HandlerResult MetersPanel_eventHandler(Panel* super, int ch) {
+    MetersPanel* this = (MetersPanel*) super;
+-   
++
+    int selected = Panel_getSelectedIndex(super);
+    HandlerResult result = IGNORED;
+    bool sideMove = false;
+@@ -115,6 +115,7 @@
+          break;
+       }
+       case KEY_UP:
++      case 'k':
+       {
+          if (!this->moving) {
+             break;
+@@ -131,6 +132,7 @@
+          break;
+       }
+       case KEY_DOWN:
++      case 'j':
+       {
+          if (!this->moving) {
+             break;
+@@ -147,6 +149,7 @@
+          break;
+       }
+       case KEY_RIGHT:
++      case 'l':
+       {
+          sideMove = moveToNeighbor(this, this->rightNeighbor, selected);
+          if (this->moving && !sideMove) {
+@@ -158,6 +161,7 @@
+          break;
+       }
+       case KEY_LEFT:
++      case 'h':
+       {
+          sideMove = moveToNeighbor(this, this->leftNeighbor, selected);
+          if (this->moving && !sideMove) {
+diff -u htop-2.0.0/Panel.c htop-2.0.0-vim/Panel.c
+--- htop-2.0.0/Panel.c	2016-02-02 15:58:45.000000000 +0100
++++ htop-2.0.0-vim/Panel.c	2016-02-18 00:08:35.082965167 +0100
+@@ -372,14 +372,16 @@
+ 
+ bool Panel_onKey(Panel* this, int key) {
+    assert (this != NULL);
+-   
++
+    int size = Vector_size(this->items);
+    switch (key) {
+    case KEY_DOWN:
++   case 'j':
+    case KEY_CTRLN:
+       this->selected++;
+       break;
+    case KEY_UP:
++   case 'k':
+    case KEY_CTRLP:
+       this->selected--;
+       break;
+@@ -394,6 +396,7 @@
+       break;
+    #endif
+    case KEY_LEFT:
++   case 'h':
+    case KEY_CTRLB:
+       if (this->scrollH > 0) {
+          this->scrollH -= CRT_scrollHAmount;
+@@ -401,6 +404,7 @@
+       }
+       break;
+    case KEY_RIGHT:
++   case 'l':
+    case KEY_CTRLF:
+       this->scrollH += CRT_scrollHAmount;
+       this->needsRedraw = true;
+@@ -444,7 +448,7 @@
+    if (this->selected < 0) {
+       this->selected = 0;
+       this->needsRedraw = true;
+-   } else if (this->selected >= size) {   
++   } else if (this->selected >= size) {
+       this->selected = size - 1;
+       this->needsRedraw = true;
+    }
+diff -u htop-2.0.0/ScreenManager.c htop-2.0.0-vim/ScreenManager.c
+--- htop-2.0.0/ScreenManager.c	2016-02-02 15:58:45.000000000 +0100
++++ htop-2.0.0-vim/ScreenManager.c	2016-02-18 00:03:04.302975368 +0100
+@@ -165,7 +165,7 @@
+ void ScreenManager_run(ScreenManager* this, Panel** lastFocus, int* lastKey) {
+    bool quit = false;
+    int focus = 0;
+-   
++
+    Panel* panelFocus = setCurrentPanel((Panel*) Vector_get(this->panels, focus));
+ 
+    double oldTime = 0.0;
+@@ -183,7 +183,7 @@
+       if (this->header) {
+          checkRecalculation(this, &oldTime, &sortTimeout, &redraw, &rescan, &timedOut);
+       }
+-      
++
+       if (redraw) {
+          ScreenManager_drawPanels(this, focus);
+       }
+@@ -287,7 +287,7 @@
+          quit = true;
+          continue;
+       }
+-      
++
+       switch (ch) {
+       case KEY_RESIZE:
+       {
+Common subdirectories: htop-2.0.0/darwin and htop-2.0.0-vim/darwin
+Common subdirectories: htop-2.0.0/freebsd and htop-2.0.0-vim/freebsd
+Common subdirectories: htop-2.0.0/linux and htop-2.0.0-vim/linux
+Common subdirectories: htop-2.0.0/m4 and htop-2.0.0-vim/m4
+Common subdirectories: htop-2.0.0/openbsd and htop-2.0.0-vim/openbsd
+Common subdirectories: htop-2.0.0/scripts and htop-2.0.0-vim/scripts
+Common subdirectories: htop-2.0.0/unsupported and htop-2.0.0-vim/unsupported
