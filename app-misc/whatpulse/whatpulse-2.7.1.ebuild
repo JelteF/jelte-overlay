@@ -60,4 +60,7 @@ pkg_postinst() {
 	elog "gpasswd -a \$USER input"
 	elog ""
 	elog "You also have to reboot to make sure the UDEV rules are applied"
+	elog ""
+	elog "Make sure you pulse before restarting Whatpulse to be sure no data "
+	elog "is lost"
 }
